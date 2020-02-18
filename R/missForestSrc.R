@@ -153,6 +153,11 @@ missForestSrc <-
 
         varNames <- colnames(ximp)
 
+        # Parameter adapter for rfsrc
+        bootstrap <- "by.root"
+        if (replace) samptype <- "swr"
+        else samptype <- "swor"
+
         ## iterate missForest
         while (stopCriterion(varType, convNew, convOld, iter, maxiter)) {
             if (iter != 0) {
@@ -182,7 +187,8 @@ missForestSrc <-
                                 data = obsDf,
                                 ntree = ntree,
                                 mtry = mtry,
-                                replace = replace,
+                                bootstrap = bootstrap,
+                                samptype = samptype,
                                 forest = TRUE,
                                 ...
                             )
@@ -202,7 +208,8 @@ missForestSrc <-
                                     data = obsDf,
                                     ntree = ntree,
                                     mtry = mtry,
-                                    replace = replace,
+                                    bootstrap = bootstrap,
+                                    samptype = samptype,
                                     forest = TRUE,
                                     ...
                                 )
