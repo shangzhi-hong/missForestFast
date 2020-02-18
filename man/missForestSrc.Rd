@@ -52,6 +52,12 @@ missForest(xmis, maxiter = 10, ntree = 100, variablewise = FALSE,
     logical. If 'TRUE' bootstrap sampling (with replacements) is
     performed else subsampling (without replacements).
   }
+  \item{keepAll}{
+    logical. If 'TRUE', keep intermediate results.
+  }
+  \item{...}{
+    Paramters to pass down.
+  }
 }
 \details{
   After each iteration the difference between the previous and the new

@@ -13,6 +13,7 @@
 # Shangzhi Hong, Feb 2020
 #
 ##############################################################################
+
 missForestSrc <-
     function(xmis,
              maxiter = 10,
@@ -23,7 +24,9 @@ missForestSrc <-
              mtry = floor(sqrt(ncol(xmis))),
              replace = TRUE,
              xtrue = NA,
-             ...)
+             keepAll = FALSE,
+             ...
+    )
     {
         ## ----------------------------------------------------------------------
         ## Arguments:
@@ -39,9 +42,12 @@ missForestSrc <-
         ## replace      = (boolean) if TRUE bootstrap sampling (with replacements)
         ##                is performed, else subsampling (without replacements)
         ## xtrue        = complete data matrix
+        ##
         ## ----------------------------------------------------------------------
         ## Author: Daniel Stekhoven, stekhoven@stat.math.ethz.ch
 
+        timeInit <- Sys.time()
+        ## stop in case of wrong inputs passed to randomForest
         n <- nrow(xmis)
         p <- ncol(xmis)
 
@@ -111,6 +117,9 @@ missForestSrc <-
         OOBerror <- numeric(p)
         names(OOBerror) <- varType
 
+        errAll <- vector(mode = "list", length = maxiter)
+        oobErrAll <- vector(mode = "list", length = maxiter)
+
         ## setup convergence variables w.r.t. variable types
         if (k == 1) {
             if (unique(varType) == 'numeric') {
@@ -169,14 +178,14 @@ missForestSrc <-
                         xntree <- NULL
                         RF <-
                             rfsrc.fast(
-                            formula = impFormula,
-                            data = obsDf,
-                            ntree = ntree,
-                            mtry = mtry,
-                            replace = replace,
-                            forest = TRUE,
-                            ...
-                        )
+                                formula = impFormula,
+                                data = obsDf,
+                                ntree = ntree,
+                                mtry = mtry,
+                                replace = replace,
+                                forest = TRUE,
+                                ...
+                            )
                         ## record out-of-bag error
                         OOBerror[varInd] <- RF$err.rate[ntree]
                         misY <- predict(RF, misX)$predicted
@@ -189,14 +198,14 @@ missForestSrc <-
                         } else {
                             RF <-
                                 rfsrc.fast(
-                                formula = impFormula,
-                                data = obsDf,
-                                ntree = ntree,
-                                mtry = mtry,
-                                replace = replace,
-                                forest = TRUE,
-                                ...
-                            )
+                                    formula = impFormula,
+                                    data = obsDf,
+                                    ntree = ntree,
+                                    mtry = mtry,
+                                    replace = replace,
+                                    forest = TRUE,
+                                    ...
+                                )
                             ## record out-of-bag error
                             OOBerror[varInd] <- RF$err.rate[[ntree, 1]]
                             ## predict missing parts of Y
@@ -254,7 +263,10 @@ missForestSrc <-
 
             if (any(!is.na(xtrue))) {
                 err <- suppressWarnings(mixError(ximp, xmis, xtrue))
+                errAll[[iter]] <- err
             }
+
+            oobErrAll[[iter]] <- OOBerr
 
             ## return status output, if desired
             if (verbose) {
@@ -271,22 +283,43 @@ missForestSrc <-
         ## produce output w.r.t. stopping rule
         if (iter == maxiter) {
             if (any(is.na(xtrue))) {
-                out <- list(ximp = Ximp[[iter]], OOBerror = OOBerr)
+                out <- list(ximp = Ximp[[iter]],
+                            OOBerror = OOBerr,
+                            totalIter = iter,
+                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs"))
             } else {
                 out <- list(ximp = Ximp[[iter]],
                             OOBerror = OOBerr,
-                            error = err)
+                            error = err,
+                            errAll = errAll,
+                            oobErrAll = oobErrAll,
+                            totalIter = iter,
+                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs")
+                )
             }
+            if (keepAll) out[["ximpAll"]] <- Ximp
         } else {
             if (any(is.na(xtrue))) {
-                out <- list(ximp = Ximp[[iter - 1]], OOBerror = OOBerrOld)
+                out <- list(ximp = Ximp[[iter - 1]],
+                            OOBerror = OOBerrOld,
+                            errAll = errAll[seq_len(iter - 1)],
+                            oobErrAll = oobErrAll[seq_len(iter - 1)],
+                            totalIter = iter,
+                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs")
+                )
             } else {
                 out <- list(
                     ximp = Ximp[[iter - 1]],
                     OOBerror = OOBerrOld,
-                    error = suppressWarnings(mixError(Ximp[[iter - 1]], xmis, xtrue))
+                    error = suppressWarnings(mixError(Ximp[[iter - 1]], xmis, xtrue)),
+                    errAll = errAll[seq_len(iter - 1)],
+                    oobErrAll = oobErrAll[seq_len(iter - 1)],
+                    totalIter = iter,
+                    timeElapsed = difftime(Sys.time(), timeInit, units = "secs")
                 )
+
             }
+            if (keepAll) out[["ximpAll"]] <- Ximp[seq_len(iter - 1)]
         }
         class(out) <- 'missForest'
         return(out)

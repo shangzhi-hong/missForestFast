@@ -3,7 +3,11 @@
 
 # missForestFast
 
-## Accleration of random-forest-based methods, a case study for iterative missing data imputation
+`missForestFast` is a project for a case study for improving existing
+random-forst-based methods, and added the ability to keep intermediate
+results for further study the iterative imputation method.
+
+## Accleration of random-forest-based methods
 
 [`missForestFast`](https://github.com/shangzhi-hong/missForestFast)
 provides user with the accelerated version of missing data imputation
@@ -19,4 +23,15 @@ package by running the following code in R:
 ``` r
 if(!"remotes" %in% installed.packages()) install.packages("remotes")
 remotes::install_github("shangzhi-hong/missForestFast")
+```
+
+Run example:
+
+``` r
+library(missForestFast)
+data(iris)
+set.seed(81)
+iris.mis <- prodNA(iris, noNA = 0.2)
+impRanger <- missForestRanger(iris.mis, xtrue = iris, keepAll = TRUE)
+impSrc <- missForestSrc(iris.mis, xtrue = iris, keepAll = TRUE)
 ```
