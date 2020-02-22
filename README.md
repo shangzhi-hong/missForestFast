@@ -1,23 +1,23 @@
 
-<!-- README.md is generated from README.Rmd. Please edit that file -->
-
 # missForestFast
 
 `missForestFast` is a project for a case study for improving existing
-random-forst-based methods, and added the ability to keep intermediate
-results for further study the iterative imputation method.
+random-forst-based method
+[`missForest`](https://CRAN.R-project.org/package=missForest), and added
+the functionalities like outputting intermediate results.
 
 ## Accleration of random-forest-based methods
 
 [`missForestFast`](https://github.com/shangzhi-hong/missForestFast)
-provides user with the accelerated version of missing data imputation
-powered by [`ranger`](https://CRAN.R-project.org/package=ranger) and
+provides user with the accelerated version of random-forest-based
+missing data imputation powered by
+[`ranger`](https://CRAN.R-project.org/package=ranger) and
 [`randomForestSRC`](https://CRAN.R-project.org/package=randomForestSRC)
 
 ## Installation for development version from GitHub
 
 Currently the `missForestFast` package is only available as source files
-on GitHub, any interested user can install and test the `RfEmpImp`
+on GitHub, any interested user can install and test the `missForestFast`
 package by running the following code in R:
 
 ``` r
