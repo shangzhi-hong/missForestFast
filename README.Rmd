@@ -25,7 +25,7 @@ provides user with the accelerated version of missing data imputation powered by
 
 ## Installation for development version from GitHub
 Currently the `missForestFast` package is only available as source files on GitHub,
-any interested user can install and test the `RfEmpImp` package by running
+any interested user can install and test the `missForestFast` package by running
 the following code in R:
 
 ``` r

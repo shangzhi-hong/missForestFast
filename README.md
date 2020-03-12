@@ -17,7 +17,7 @@ powered by [`ranger`](https://CRAN.R-project.org/package=ranger) and
 ## Installation for development version from GitHub
 
 Currently the `missForestFast` package is only available as source files
-on GitHub, any interested user can install and test the `RfEmpImp`
+on GitHub, any interested user can install and test the `missForestFast`
 package by running the following code in R:
 
 ``` r
