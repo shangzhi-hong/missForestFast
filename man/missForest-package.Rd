@@ -1,11 +1,11 @@
-\name{missForest-package}
-\alias{missForest-package}
+\name{missForestFast-package}
+\alias{missForestFast-package}
 \docType{package}
 \title{
-Nonparametric Missing Value Imputation using Random Forest
+Faster Nonparametric Missing Value Imputation using Random Forest
 }
 \description{
-  'missForest' is used to impute missing values particularly in the case
+  'missForestFast' is used to impute missing values particularly in the case
   of mixed-type data. It can be used to impute continuous and/or
   categorical data including complex interactions and nonlinear
   relations. It yields an out-of-bag (OOB) imputation error estimate.
@@ -13,10 +13,10 @@ Nonparametric Missing Value Imputation using Random Forest
 }
 \details{
 \tabular{ll}{
-Package: \tab missForest\cr
+Package: \tab missForestFast\cr
 Type: \tab Package\cr
-Version: \tab 1.4\cr
-Date: \tab 2013-12-31\cr
+Version: \tab 0.5.3\cr
+Date: \tab 2020-03-12\cr
 License: \tab GPL (>= 2)\cr
 LazyLoad: \tab yes\cr
 }

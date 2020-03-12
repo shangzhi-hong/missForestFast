@@ -1,7 +1,7 @@
 Package: missForestFast
 Type: Package
-Title: Nonparametric Missing Value Imputation using Random Forest
-Version: 0.5.2
+Title: Faster Nonparametric Missing Value Imputation using Random Forest
+Version: 0.5.3
 Authors@R: c(person("Shangzhi", "Hong", role = "aut",
     email = "shangzhi-hong@hotmail.com"),
     person("Daniel J.", "Stekhoven", role = "cre",
@@ -20,3 +20,4 @@ Description: The function 'missForest' in this package is used to
 License: GPL (>= 2)
 URL: https://github.com/shangzhi-hong/missForestFast
 NeedsCompilation: no
+RoxygenNote: 7.0.2

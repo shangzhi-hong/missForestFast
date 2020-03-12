@@ -14,6 +14,13 @@ test_that("Test example for ranger implementation", {
                     isTRUE(length(impRanger$oobErrAll) == impRanger$totalIter - 1))
     expect_true(isTRUE(length(impRanger$ximpAll) == impRanger$totalIter) ||
                     isTRUE(length(impRanger$ximpAll) == impRanger$totalIter - 1))
+    targetIter <- 20
+    impRanger <- missForestRanger(iris.mis, xtrue = iris,
+                                  maxiter = targetIter,
+                                  keepAll = T,
+                                  forceIter = T)
+    expect_equal(length(impRanger[["oobErrAll"]]), targetIter)
+    expect_equal(length(impRanger[["errAll"]]), targetIter)
 })
 
 
@@ -32,4 +39,11 @@ test_that("Test example for randomForestSRC implementation", {
                     isTRUE(length(impSrc$oobErrAll) == impSrc$totalIter - 1))
     expect_true(isTRUE(length(impSrc$ximpAll) == impSrc$totalIter) ||
                     isTRUE(length(impSrc$ximpAll) == impSrc$totalIter - 1))
+    targetIter <- 20
+    impRanger <- missForestSrc(iris.mis, xtrue = iris,
+                                  maxiter = targetIter,
+                                  keepAll = T,
+                                  forceIter = T)
+    expect_equal(length(impRanger[["oobErrAll"]]), targetIter)
+    expect_equal(length(impRanger[["errAll"]]), targetIter)
 })

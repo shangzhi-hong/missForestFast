@@ -55,6 +55,9 @@ missForest(xmis, maxiter = 10, ntree = 100, variablewise = FALSE,
   \item{keepAll}{
     logical. If 'TRUE', keep intermediate results.
   }
+  \item{forceIter}{
+    logical. If 'TRUE', force to run until the maximum iteration.
+  }
   \item{...}{
     Paramters to pass down.
   }

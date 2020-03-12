@@ -25,6 +25,7 @@ missForestSrc <-
              replace = TRUE,
              xtrue = NA,
              keepAll = FALSE,
+             forceIter = FALSE,
              ...
     )
     {
@@ -141,13 +142,19 @@ missForestSrc <-
                      convNew,
                      convOld,
                      iter,
-                     maxiter) {
-                k <- length(unique(varType))
-                if (k == 1) {
-                    (convNew < convOld) & (iter < maxiter)
+                     maxiter,
+                     forceIter) {
+                if (forceIter) {
+                    (iter < maxiter)
                 } else {
-                    ((convNew[1] < convOld[1]) |
-                         (convNew[2] < convOld[2])) & (iter < maxiter)
+                    k <- length(unique(varType))
+                    if (k == 1) {
+                        (convNew < convOld) & (iter < maxiter)
+                    } else {
+                        ((convNew[1] < convOld[1]) |
+                             (convNew[2] < convOld[2])) &
+                            (iter < maxiter)
+                    }
                 }
             }
 
@@ -159,7 +166,7 @@ missForestSrc <-
         else samptype <- "swor"
 
         ## iterate missForest
-        while (stopCriterion(varType, convNew, convOld, iter, maxiter)) {
+        while (stopCriterion(varType, convNew, convOld, iter, maxiter, forceIter)) {
             if (iter != 0) {
                 convOld <- convNew
                 OOBerrOld <- OOBerr
