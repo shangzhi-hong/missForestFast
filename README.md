@@ -93,3 +93,30 @@ print(impRangerRand[["errAll"]])
 ```
 
 <img src="man/figures/README-Init-1.png" width="50%" style="display: block; margin: auto;" /><img src="man/figures/README-Init-2.png" width="50%" style="display: block; margin: auto;" />
+
+## Number of trees
+
+Even a small number of trees in the random forest model can lead to
+valid results, but the results can have unstable out-of-bag errors.
+
+Example: Example:
+
+``` r
+library(missForestFast)
+data(iris)
+set.seed(2020)
+iris.mis <- prodNA(iris, noNA = 0.25)
+targetIter <- 100
+impRangerMean <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = TRUE, forceIter = TRUE, randInit = FALSE, ntree = 100)
+# Out-of-bag error with 100 trees
+print(impRangerMean[["oobErrAll"]])
+# Error from true data with 100 trees
+print(impRangerMean[["errAll"]])
+impRangerRand <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = TRUE, forceIter = TRUE, randInit = FALSE)
+# Out-of-bag error with 10 trees
+print(impRangerRand[["oobErrAll"]])
+# Error from true data with 10 trees
+print(impRangerRand[["errAll"]])
+```
+
+<img src="man/figures/README-TreeNum-1.png" width="50%" style="display: block; margin: auto;" /><img src="man/figures/README-TreeNum-2.png" width="50%" style="display: block; margin: auto;" />
