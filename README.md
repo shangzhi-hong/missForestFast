@@ -4,12 +4,12 @@
 # missForestFast
 
 `missForestFast` is a project for a case study for improving an existing
-random-forst-based method,
-[`missForest`](https://CRAN.R-project.org/package=missForest), and added
-the ability to keep intermediate results for further study the iterative
-imputation method.
+random-forst-based imputation method,
+[`missForest`](https://CRAN.R-project.org/package=missForest). The
+proposed R package added the ability to keep intermediate results for
+further study on random-forest-based iterative imputation method.
 
-## Accleration of random-forest-based methods
+## Accleration using parallel computation
 
 [`missForestFast`](https://github.com/shangzhi-hong/missForestFast)
 provides user with the accelerated version of missing data imputation
@@ -64,7 +64,7 @@ print(impRanger[["errAll"]])
 
 <img src="man/figures/README-PlotIterError-1.png" width="50%" style="display: block; margin: auto;" /><img src="man/figures/README-PlotIterError-2.png" width="50%" style="display: block; margin: auto;" />
 
-## The initialization of the imputation
+## The initialization of imputation
 
 In our opinion, the missForest algorithm should be recognized as a
 special case of MICE (Multivariate Imputation using Chained Equations),
