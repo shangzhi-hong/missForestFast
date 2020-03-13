@@ -62,11 +62,34 @@ print(impRanger[["oobErrAll"]])
 print(impRanger[["errAll"]])
 ```
 
-<img src="man/figures/README-PlotIterError-1.png" width="75%" style="display: block; margin: auto;" /><img src="man/figures/README-PlotIterError-2.png" width="75%" style="display: block; margin: auto;" />
+<img src="man/figures/README-PlotIterError-1.png" width="50%" style="display: block; margin: auto;" /><img src="man/figures/README-PlotIterError-2.png" width="50%" style="display: block; margin: auto;" />
 
 ## The initialization of the imputation
 
 In our opinion, the missForest algorithm should be recognized as a
 special case of MICE (Multivariate Imputation using Chained Equations),
 using predicted means as a replacement of samples from conditional
-distributions.
+distributions. Use of variable mean (for continuous variable) and most
+frequent category (for categorical variable) may not be the best choice.
+
+Example:
+
+``` r
+library(missForestFast)
+data(iris)
+set.seed(202003)
+iris.mis <- prodNA(iris, noNA = 0.25)
+targetIter <- 100
+impRangerMean <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = TRUE, forceIter = TRUE, randInit = FALSE)
+# Out-of-bag error with original initialization
+print(impRangerMean[["oobErrAll"]])
+# Error from true data with original initialization
+print(impRangerMean[["errAll"]])
+impRangerRand <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = TRUE, forceIter = TRUE, randInit = TRUE)
+# Out-of-bag error with random initialization
+print(impRangerRand[["oobErrAll"]])
+# Error from true data with random initialization
+print(impRangerRand[["errAll"]])
+```
+
+<img src="man/figures/README-Init-1.png" width="50%" style="display: block; margin: auto;" /><img src="man/figures/README-Init-2.png" width="50%" style="display: block; margin: auto;" />

@@ -26,6 +26,7 @@ missForestSrc <-
              xtrue = NA,
              keepAll = FALSE,
              forceIter = FALSE,
+             randInit = FALSE,
              ...
     )
     {
@@ -66,29 +67,47 @@ missForestSrc <-
         ximp <- xmis
         xAttrib <- lapply(xmis, attributes)
         varType <- character(p)
-        for (t.co in 1:p) {
-            if (is.null(xAttrib[[t.co]])) {
-                varType[t.co] <- 'numeric'
-                ximp[is.na(xmis[, t.co]), t.co] <-
-                    mean(xmis[, t.co], na.rm = TRUE)
-            } else {
-                varType[t.co] <- 'factor'
-                ## take the level which is more 'likely' (majority vote)
-                max.level <- max(table(ximp[, t.co]))
-                ## if there are several classes which are major, sample one at random
-                class.assign <-
-                    sample(names(which(max.level == summary(ximp[, t.co]))), 1)
-                ## it shouldn't be the NA class
-                if (class.assign != "NA's") {
-                    ximp[is.na(xmis[, t.co]), t.co] <- class.assign
-                } else {
-                    while (class.assign == "NA's") {
-                        class.assign <- sample(names(which(
-                            max.level ==
-                                summary(ximp[, t.co])
-                        )), 1)
+        if (randInit) {
+            ximp[] <- lapply(ximp, function(vec) {
+                naLoc <- is.na(vec)
+                naNum <- sum(naLoc)
+                if (naNum > 0) {
+                    vec[naLoc] <- sample(vec[!naLoc], size = naNum, replace = TRUE)
+                    vec
+                }
+            })
+        } else {
+            for (t.co in 1:p) {
+                if (is.null(xAttrib[[t.co]])) {
+                    varType[t.co] <- 'numeric'
+                    ximp[is.na(xmis[, t.co]), t.co] <-
+                        mean(xmis[, t.co], na.rm = TRUE)
+                    for (t.co in 1:p) {
+                        if (is.null(xAttrib[[t.co]])) {
+                            varType[t.co] <- 'numeric'
+                        } else {
+                            varType[t.co] <- 'factor'
+                        }
                     }
-                    ximp[is.na(xmis[, t.co]), t.co] <- class.assign
+                } else {
+                    varType[t.co] <- 'factor'
+                    ## take the level which is more 'likely' (majority vote)
+                    max.level <- max(table(ximp[, t.co]))
+                    ## if there are several classes which are major, sample one at random
+                    class.assign <-
+                        sample(names(which(max.level == summary(ximp[, t.co]))), 1)
+                    ## it shouldn't be the NA class
+                    if (class.assign != "NA's") {
+                        ximp[is.na(xmis[, t.co]), t.co] <- class.assign
+                    } else {
+                        while (class.assign == "NA's") {
+                            class.assign <- sample(names(which(
+                                max.level ==
+                                    summary(ximp[, t.co])
+                            )), 1)
+                        }
+                        ximp[is.na(xmis[, t.co]), t.co] <- class.assign
+                    }
                 }
             }
         }

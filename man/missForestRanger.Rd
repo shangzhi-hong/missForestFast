@@ -58,6 +58,9 @@ missForest(xmis, maxiter = 10, ntree = 100, variablewise = FALSE,
   \item{forceIter}{
     logical. If 'TRUE', force to run until the maximum iteration.
   }
+  \item{randInit}{
+    logical. If 'TRUE', use random samples for initialization.
+  }
   \item{...}{
     Paramters to pass down.
   }
