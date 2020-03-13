@@ -99,7 +99,7 @@ print(impRangerRand[["errAll"]])
 Even a small number of trees in the random forest model can lead to
 valid results, but the results can have unstable out-of-bag errors.
 
-Example: Example:
+Example:
 
 ``` r
 library(missForestFast)
@@ -112,7 +112,7 @@ impRangerMean <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, 
 print(impRangerMean[["oobErrAll"]])
 # Error from true data with 100 trees
 print(impRangerMean[["errAll"]])
-impRangerRand <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = TRUE, forceIter = TRUE, randInit = FALSE)
+impRangerRand <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = TRUE, forceIter = TRUE, randInit = FALSE, ntree = 10)
 # Out-of-bag error with 10 trees
 print(impRangerRand[["oobErrAll"]])
 # Error from true data with 10 trees
