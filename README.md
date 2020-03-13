@@ -3,9 +3,11 @@
 
 # missForestFast
 
-`missForestFast` is a project for a case study for improving existing
-random-forst-based methods, and added the ability to keep intermediate
-results for further study the iterative imputation method.
+`missForestFast` is a project for a case study for improving an existing
+random-forst-based method,
+[`missForest`](https://CRAN.R-project.org/package=missForest), and added
+the ability to keep intermediate results for further study the iterative
+imputation method.
 
 ## Accleration of random-forest-based methods
 
@@ -30,28 +32,41 @@ Run example:
 ``` r
 library(missForestFast)
 data(iris)
-set.seed(81)
-iris.mis <- prodNA(iris, noNA = 0.2)
+set.seed(202003)
+iris.mis <- prodNA(iris, noNA = 0.5)
 impRanger <- missForestRanger(iris.mis, xtrue = iris, keepAll = TRUE)
 impSrc <- missForestSrc(iris.mis, xtrue = iris, keepAll = TRUE)
 ```
 
-## The auto-stop criterion may be misleading
+## The auto-stop criterion
 
-The original missForest algorithm stops the imputation once the
-out-of-bag error increases, however, the increase can be instantaneous.
-As a fact, the symbolic auto-stop criterion may just be a random stop
-from the continuous fluctuations of the out-of-bag error. Example:
+The auto-stop criterion used by original missForest algorithm may be
+misleading. The original missForest algorithm stops the imputation once
+the out-of-bag error increases, however, the increase can be
+instantaneous. As a fact, the symbolic auto-stop criterion may just be a
+random stop from the continuous fluctuations of the out-of-bag error
+estimates.
+
+Example:
 
 ``` r
 library(missForestFast)
 data(iris)
-set.seed(81)
-iris.mis <- prodNA(iris, noNA = 0.2)
-targetIter <- 20
-impRanger <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = T, forceIter = T)
+set.seed(202003)
+iris.mis <- prodNA(iris, noNA = 0.25)
+targetIter <- 100
+impRanger <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = TRUE, forceIter = TRUE)
 # Out-of-bag error (for auto-stop)
 print(impRanger[["oobErrAll"]])
 # Error from true data
 print(impRanger[["errAll"]])
 ```
+
+<img src="man/figures/README-PlotIterError-1.png" width="75%" style="display: block; margin: auto;" /><img src="man/figures/README-PlotIterError-2.png" width="75%" style="display: block; margin: auto;" />
+
+## The initialization of the imputation
+
+In our opinion, the missForest algorithm should be recognized as a
+special case of MICE (Multivariate Imputation using Chained Equations),
+using predicted means as a replacement of samples from conditional
+distributions.
