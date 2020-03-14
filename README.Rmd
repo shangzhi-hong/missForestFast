@@ -275,3 +275,95 @@ bind_rows(resTrueMean, resTrueRand) %>%
     theme_classic() +
     ggtitle("Tree Number - True Error")
 ```
+
+## Order of variables
+By default, missForest algorithm does imputation by the order of missingness
+in the variables.
+But the order of variables for imputation can be irrelevant to the final results,
+even the out-of-bag error can appear higher, but the error from true data shows
+the contrary
+
+Example:
+``` r
+library(missForestFast)
+data(iris)
+set.seed(2020)
+iris.mis <- prodNA(iris, noNA = 0.25)
+targetIter <- 100
+impRangerDefault <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = TRUE, forceIter = TRUE, randInit = FALSE, ntree = 100, varOrderSeq = FALSE)
+# Out-of-bag error with default order
+print(impRangerDefault[["oobErrAll"]])
+# Error from true data with default order
+print(impRangerDefault[["errAll"]])
+impRangerSequential <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = TRUE, forceIter = TRUE, randInit = FALSE, ntree = 100, varOrderSeq = TRUE)
+# Out-of-bag error with sequential order
+print(impRangerSequential[["oobErrAll"]])
+# Error from true data with sequential order
+print(impRangerSequential[["errAll"]])
+```
+```{r VarOrder, echo=FALSE, fig.align='center', message=FALSE, warning=FALSE, out.width='50%'}
+library(ggplot2)
+library(dplyr)
+library(tidyr)
+library(missForestFast)
+data(iris)
+set.seed(2020)
+iris.mis <- prodNA(iris, noNA = 0.25)
+targetIter <- 100
+impRangerDefault <-
+    missForestRanger(
+        iris.mis,
+        xtrue = iris,
+        maxiter = targetIter,
+        keepAll = TRUE,
+        forceIter = TRUE,
+        randInit = FALSE,
+        ntree = 100,
+        varOrderSeq = FALSE
+    )
+resOobDefault <- do.call(rbind, impRangerMean[["oobErrAll"]]) %>%
+    as.data.frame() %>%
+    mutate(Iteration = row_number()) %>%
+    pivot_longer(c(NRMSE, PFC), names_to = "Type", values_to = "Value") %>%
+    mutate(Initialization = "Default")
+resTrueDefault <- do.call(rbind, impRangerMean[["errAll"]]) %>%
+    as.data.frame() %>%
+    mutate(Iteration = row_number()) %>%
+    pivot_longer(c(NRMSE, PFC), names_to = "Type", values_to = "Value") %>%
+    mutate(Initialization = "Default")
+
+impRangerSequential <-
+    missForestRanger(
+        iris.mis,
+        xtrue = iris,
+        maxiter = targetIter,
+        keepAll = TRUE,
+        forceIter = TRUE,
+        randInit = FALSE,
+        ntree = 100,
+        varOrderSeq = TRUE
+    )
+resOobSequential <- do.call(rbind, impRangerRand[["oobErrAll"]]) %>%
+    as.data.frame() %>%
+    mutate(Iteration = row_number()) %>%
+    pivot_longer(c(NRMSE, PFC), names_to = "Type", values_to = "Value") %>%
+    mutate(Initialization = "Sequential")
+resTrueSequential <- do.call(rbind, impRangerRand[["errAll"]]) %>%
+    as.data.frame() %>%
+    mutate(Iteration = row_number()) %>%
+    pivot_longer(c(NRMSE, PFC), names_to = "Type", values_to = "Value") %>%
+    mutate(Initialization = "Sequential")
+bind_rows(resOobDefault, resOobSequential) %>%
+    mutate(Type = paste0(Initialization, "_", Type)) %>%
+    ggplot(aes(x = Iteration, y = Value, color = Type)) +
+    geom_line() +
+    theme_classic() +
+    ggtitle("Variable Order - OOB Error")
+
+bind_rows(resTrueDefault, resTrueSequential) %>%
+    mutate(Type = paste0(Initialization, "_", Type)) %>%
+    ggplot(aes(x = Iteration, y = Value, color = Type)) +
+    geom_line() +
+    theme_classic() +
+    ggtitle("Variable Order - True Error")
+```

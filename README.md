@@ -120,3 +120,32 @@ print(impRangerRand[["errAll"]])
 ```
 
 <img src="man/figures/README-TreeNum-1.png" width="50%" style="display: block; margin: auto;" /><img src="man/figures/README-TreeNum-2.png" width="50%" style="display: block; margin: auto;" />
+
+## Order of variables
+
+By default, missForest algorithm does imputation by the order of
+missingness in the variables. But the order of variables for imputation
+can be irrelevant to the final results, even the out-of-bag error can
+appear higher, but the error from true data shows the contrary
+
+Example:
+
+``` r
+library(missForestFast)
+data(iris)
+set.seed(2020)
+iris.mis <- prodNA(iris, noNA = 0.25)
+targetIter <- 100
+impRangerDefault <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = TRUE, forceIter = TRUE, randInit = FALSE, ntree = 100, varOrderSeq = FALSE)
+# Out-of-bag error with default order
+print(impRangerDefault[["oobErrAll"]])
+# Error from true data with default order
+print(impRangerDefault[["errAll"]])
+impRangerSequential <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keepAll = TRUE, forceIter = TRUE, randInit = FALSE, ntree = 100, varOrderSeq = TRUE)
+# Out-of-bag error with sequential order
+print(impRangerSequential[["oobErrAll"]])
+# Error from true data with sequential order
+print(impRangerSequential[["errAll"]])
+```
+
+<img src="man/figures/README-VarOrder-1.png" width="50%" style="display: block; margin: auto;" /><img src="man/figures/README-VarOrder-2.png" width="50%" style="display: block; margin: auto;" />
