@@ -61,6 +61,9 @@ missForest(xmis, maxiter = 10, ntree = 100, variablewise = FALSE,
   \item{randInit}{
     logical. If 'TRUE', use random samples for initialization.
   }
+  \item{varOrderSeq}{
+    logical. If 'TRUE', impute variables sequentially as the original order.
+  }
   \item{...}{
     Paramters to pass down.
   }

@@ -27,6 +27,7 @@ missForestSrc <-
              keepAll = FALSE,
              forceIter = FALSE,
              randInit = FALSE,
+             varOrderSeq = FALSE,
              ...
     )
     {
@@ -76,19 +77,19 @@ missForestSrc <-
                     vec
                 }
             })
+            for (t.co in 1:p) {
+                if (is.null(xAttrib[[t.co]])) {
+                    varType[t.co] <- 'numeric'
+                } else {
+                    varType[t.co] <- 'factor'
+                }
+            }
         } else {
             for (t.co in 1:p) {
                 if (is.null(xAttrib[[t.co]])) {
                     varType[t.co] <- 'numeric'
                     ximp[is.na(xmis[, t.co]), t.co] <-
                         mean(xmis[, t.co], na.rm = TRUE)
-                    for (t.co in 1:p) {
-                        if (is.null(xAttrib[[t.co]])) {
-                            varType[t.co] <- 'numeric'
-                        } else {
-                            varType[t.co] <- 'factor'
-                        }
-                    }
                 } else {
                     varType[t.co] <- 'factor'
                     ## take the level which is more 'likely' (majority vote)
@@ -112,19 +113,17 @@ missForestSrc <-
             }
         }
 
-        ## extract missingness pattern
-        NAloc <- is.na(xmis)            # where are missings
-        noNAvar <-
-            apply(NAloc, 2, sum) # how many are missing in the vars
-        sort.j <-
-            order(noNAvar)        # indices of increasing amount of NA in vars
-        if (decreasing)
-            sort.j <- rev(sort.j)
-        sort.noNAvar <- noNAvar[sort.j]
-
-        ## compute a list of column indices for variable parallelization
-        nzsort.j <- sort.j[sort.noNAvar > 0]
-
+        # extract missingness pattern
+        NAloc <- is.na(xmis)
+        # how many are missing in the vars
+        noNAvar <- apply(NAloc, 2, sum)
+        # indices of increasing amount of NA in vars
+        if (varOrderSeq) {
+            sort.j <- seq_len(p)
+        } else {
+            sort.j <- order(noNAvar)
+            if (decreasing) sort.j <- rev(sort.j)
+        }
 
         ## output
         Ximp <- vector('list', maxiter)
@@ -319,6 +318,7 @@ missForestSrc <-
                 out <- list(ximp = Ximp[[iter]],
                             OOBerror = OOBerr,
                             totalIter = iter,
+                            impVarOrder = colnames(xmis)[sort.j],
                             timeElapsed = difftime(Sys.time(), timeInit, units = "secs"))
             } else {
                 out <- list(ximp = Ximp[[iter]],
@@ -327,8 +327,8 @@ missForestSrc <-
                             errAll = errAll,
                             oobErrAll = oobErrAll,
                             totalIter = iter,
-                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs")
-                )
+                            impVarOrder = colnames(xmis)[sort.j],
+                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs"))
             }
             if (keepAll) out[["ximpAll"]] <- Ximp
         } else {
@@ -338,8 +338,8 @@ missForestSrc <-
                             errAll = errAll[seq_len(iter - 1)],
                             oobErrAll = oobErrAll[seq_len(iter - 1)],
                             totalIter = iter,
-                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs")
-                )
+                            impVarOrder = colnames(xmis)[sort.j],
+                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs"))
             } else {
                 out <- list(
                     ximp = Ximp[[iter - 1]],
@@ -348,9 +348,8 @@ missForestSrc <-
                     errAll = errAll[seq_len(iter - 1)],
                     oobErrAll = oobErrAll[seq_len(iter - 1)],
                     totalIter = iter,
-                    timeElapsed = difftime(Sys.time(), timeInit, units = "secs")
-                )
-
+                    impVarOrder = colnames(xmis)[sort.j],
+                    timeElapsed = difftime(Sys.time(), timeInit, units = "secs"))
             }
             if (keepAll) out[["ximpAll"]] <- Ximp[seq_len(iter - 1)]
         }
