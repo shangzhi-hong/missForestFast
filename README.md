@@ -149,3 +149,12 @@ print(impRangerSequential[["errAll"]])
 ```
 
 <img src="man/figures/README-VarOrder-1.png" width="50%" style="display: block; margin: auto;" /><img src="man/figures/README-VarOrder-2.png" width="50%" style="display: block; margin: auto;" />
+
+## References
+
+1.  Wright, Marvin N., and Andreas Ziegler. “ranger: A Fast
+    Implementation of Random Forests for High Dimensional Data in C++
+    and R.” Journal of Statistical Software 77.i01 (2017).
+2.  Stekhoven, Daniel J., and Peter Bühlmann. “MissForest—non-parametric
+    missing value imputation for mixed-type data.” Bioinformatics 28.1
+    (2012): 112-118.
