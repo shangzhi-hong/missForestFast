@@ -47,10 +47,10 @@ impSrc <- missForestSrc(iris.mis, xtrue = iris, keepAll = TRUE)
 
 ## The auto-stop criterion
 The auto-stop criterion used by original missForest algorithm may be misleading.
-The original missForest algorithm stops the imputation once the out-of-bag error
-increases, however, the increase can be instantaneous. As a fact, the symbolic
-auto-stop criterion may just be a random stop from the continuous fluctuations
-of the out-of-bag error estimates.
+The original missForest algorithm stops the imputation once the error from
+the previous imputation increases, however, the increase can be 
+instantaneous. As a fact, the symbolic auto-stop criterion may just be a random
+stop from the continuous fluctuations of the out-of-bag error estimates.
 
 Example:
 ``` r
