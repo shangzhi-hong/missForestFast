@@ -136,8 +136,10 @@ missForestRanger <-
         OOBerror <- numeric(p)
         names(OOBerror) <- varType
 
+        # Lists for intermediate stats
         errAll <- vector(mode = "list", length = maxiter)
         oobErrAll <- vector(mode = "list", length = maxiter)
+        diffAll <- vector(mode = "list", length = maxiter)
 
         ## setup convergence variables w.r.t. variable types
         if (k == 1) {
@@ -280,7 +282,7 @@ missForestRanger <-
             }
 
             oobErrAll[[iter]] <- OOBerr
-
+            diffAll[[iter]] <- convNew
             ## return status output, if desired
             if (verbose) {
                 delta.start <- proc.time() - t.start
@@ -299,8 +301,10 @@ missForestRanger <-
                 out <- list(ximp = Ximp[[iter]],
                             OOBerror = OOBerr,
                             totalIter = iter,
+                            diffAll = diffAll,
                             impVarOrder = colnames(xmis)[sort.j],
-                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs"))
+                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs"),
+                            maxIter = TRUE)
             } else {
                 out <- list(ximp = Ximp[[iter]],
                             OOBerror = OOBerr,
@@ -308,8 +312,10 @@ missForestRanger <-
                             errAll = errAll,
                             oobErrAll = oobErrAll,
                             totalIter = iter,
+                            diffAll = diffAll,
                             impVarOrder = colnames(xmis)[sort.j],
-                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs"))
+                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs"),
+                            maxIter = TRUE)
             }
             if (keepAll) out[["ximpAll"]] <- Ximp
         } else {
@@ -319,8 +325,10 @@ missForestRanger <-
                             errAll = errAll[seq_len(iter - 1)],
                             oobErrAll = oobErrAll[seq_len(iter - 1)],
                             totalIter = iter,
+                            diffAll = diffAll[seq_len(iter - 1)],
                             impVarOrder = colnames(xmis)[sort.j],
-                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs"))
+                            timeElapsed = difftime(Sys.time(), timeInit, units = "secs"),
+                            maxIter = FALSE)
             } else {
                 out <- list(
                     ximp = Ximp[[iter - 1]],
@@ -329,8 +337,10 @@ missForestRanger <-
                     errAll = errAll[seq_len(iter - 1)],
                     oobErrAll = oobErrAll[seq_len(iter - 1)],
                     totalIter = iter,
+                    diffAll = diffAll[seq_len(iter - 1)],
                     impVarOrder = colnames(xmis)[sort.j],
-                    timeElapsed = difftime(Sys.time(), timeInit, units = "secs"))
+                    timeElapsed = difftime(Sys.time(), timeInit, units = "secs"),
+                    maxIter = FALSE)
 
             }
             if (keepAll) out[["ximpAll"]] <- Ximp[seq_len(iter - 1)]

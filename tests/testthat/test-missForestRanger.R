@@ -37,6 +37,12 @@ test_that("Test for ranger implementation", {
                         length(impRanger$ximpAll) == impRanger$totalIter - 1
                     )
             )
+            expect_true(
+                isTRUE(length(impRanger$diffAll) == impRanger$totalIter) ||
+                    isTRUE(
+                        length(impRanger$diffAll) == impRanger$totalIter - 1
+                    )
+            )
             expect_equal(length(impRanger[["impVarOrder"]]), ncol(iris.mis))
             targetIter <- 20
             impRanger <- missForestRanger(
@@ -50,6 +56,7 @@ test_that("Test for ranger implementation", {
             )
             expect_equal(length(impRanger[["oobErrAll"]]), targetIter)
             expect_equal(length(impRanger[["errAll"]]), targetIter)
+            expect_equal(length(impRanger[["diffAll"]]), targetIter)
         }
     }
 })

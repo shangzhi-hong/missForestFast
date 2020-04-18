@@ -29,6 +29,12 @@ test_that("Test for randomForestSRC implementation", {
                 isTRUE(length(impSrc$ximpAll) == impSrc$totalIter) ||
                     isTRUE(length(impSrc$ximpAll) == impSrc$totalIter - 1)
             )
+            expect_true(
+                isTRUE(length(impSrc$diffAll) == impSrc$totalIter) ||
+                    isTRUE(
+                        length(impSrc$diffAll) == impSrc$totalIter - 1
+                    )
+            )
             expect_equal(length(impSrc[["impVarOrder"]]), ncol(iris.mis))
             targetIter <- 20
             impSrc <- missForestSrc(
@@ -42,6 +48,7 @@ test_that("Test for randomForestSRC implementation", {
             )
             expect_equal(length(impSrc[["oobErrAll"]]), targetIter)
             expect_equal(length(impSrc[["errAll"]]), targetIter)
+            expect_equal(length(impSrc[["diffAll"]]), targetIter)
         }
     }
 })
