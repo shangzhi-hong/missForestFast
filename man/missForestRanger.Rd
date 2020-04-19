@@ -130,7 +130,29 @@ missForest(xmis, maxiter = 10, ntree = 100, variablewise = FALSE,
   \item{error}{
     true imputation error. This is only available if 'xtrue'
     was supplied. The error measures are the same as for 'OOBerror'.}
+  \item{errAll}{
+    true imputation error for all imputation states.}
   }
+  \item{oobErrAll}{
+    estimated OOB imputation error for all imputation states.}
+  }
+  \item{totalIter}{
+    the total of iterations performed.}
+  }
+  \item{diffAll}{
+    differences between imputations.}
+  }
+  \item{impVarOrder}{
+    order of variables under imputation.}
+  }
+  \item{timeElapsed}{
+    time elapsed for imputation in secs.}
+  }
+  \item{maxIter}{
+    whether reached maximum iteration.}
+  }
+}
+
 \references{Stekhoven, D.J. and Buehlmann, P. (2012), 'MissForest -
   nonparametric missing value imputation for mixed-type data',
   Bioinformatics, 28(1) 2012, 112-118, doi: 10.1093/bioinformatics/btr597}
