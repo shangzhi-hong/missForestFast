@@ -20,4 +20,4 @@ Description: The function 'missForest' in this package is used to
 License: GPL (>= 2)
 URL: https://github.com/shangzhi-hong/missForestFast
 NeedsCompilation: no
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0

@@ -64,6 +64,8 @@ impRanger <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keep
 print(impRanger[["oobErrAll"]])
 # Error from true data
 print(impRanger[["errAll"]])
+# Differences between iterations
+print(impRanger[["diffAll"]])
 ```
 
 ```{r PlotIterError, echo=FALSE, message=FALSE, warning=FALSE, out.width='50%', fig.align='center'}
@@ -96,6 +98,16 @@ do.call(rbind, impRanger[["errAll"]]) %>%
     theme_classic() +
     scale_colour_brewer(palette = "Set2") +
     ggtitle("Error from True Value")
+# Differences between iterations
+do.call(rbind, impRanger[["diffAll"]]) %>%
+    as.data.frame() %>%
+    mutate(Iteration = row_number()) %>%
+    pivot_longer(c(numeric, factor), names_to = "Type", values_to = "Value") %>%
+    ggplot(aes(x = Iteration, y = Value, color = Type)) +
+    geom_line() +
+    theme_classic() +
+    scale_colour_brewer(palette = "Set2") +
+    ggtitle("Differences between iterations")
 ```
 
 

@@ -42,10 +42,10 @@ impSrc <- missForestSrc(iris.mis, xtrue = iris, keepAll = TRUE)
 
 The auto-stop criterion used by original missForest algorithm may be
 misleading. The original missForest algorithm stops the imputation once
-the error from the previous imputation increases, however, the
-increase can be instantaneous. As a fact, the symbolic auto-stop
-criterion may just be a random stop from the continuous fluctuations of
-the out-of-bag error estimates.
+the error from the previous imputation increases, however, the increase
+can be instantaneous. As a fact, the symbolic auto-stop criterion may
+just be a random stop from the continuous fluctuations of the out-of-bag
+error estimates.
 
 Example:
 
@@ -60,9 +60,11 @@ impRanger <- missForestRanger(iris.mis, xtrue = iris, maxiter = targetIter, keep
 print(impRanger[["oobErrAll"]])
 # Error from true data
 print(impRanger[["errAll"]])
+# Differences between iterations
+print(impRanger[["diffAll"]])
 ```
 
-<img src="man/figures/README-PlotIterError-1.png" width="50%" style="display: block; margin: auto;" /><img src="man/figures/README-PlotIterError-2.png" width="50%" style="display: block; margin: auto;" />
+<img src="man/figures/README-PlotIterError-1.png" width="50%" style="display: block; margin: auto;" /><img src="man/figures/README-PlotIterError-2.png" width="50%" style="display: block; margin: auto;" /><img src="man/figures/README-PlotIterError-3.png" width="50%" style="display: block; margin: auto;" />
 
 ## The initialization of imputation
 
