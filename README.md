@@ -7,7 +7,9 @@
 random-forst-based imputation method,
 [`missForest`](https://CRAN.R-project.org/package=missForest). The
 proposed R package added the ability to keep intermediate results for
-further study on random-forest-based iterative imputation method.
+further study on random-forest-based iterative imputation method.  
+The original implementation of missForest can be [problematic under certain
+circumstances (arXiv:2004.11195)](https://arxiv.org/abs/2004.11195).
 
 ## Accleration using parallel computation
 
