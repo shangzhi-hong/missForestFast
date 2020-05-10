@@ -4,8 +4,7 @@
 #' 'missForest' is used to impute missing values particularly in the case of
 #' mixed-type data. It can be used to impute continuous and/or categorical data
 #' including complex interactions and nonlinear relations. It yields an
-#' out-of-bag (OOB) imputation error estimate. Moreover, it can be run parallel
-#' to save computation time.
+#' out-of-bag (OOB) imputation error estimate.
 #'
 #' @param xmis a data matrix with missing values. The columns correspond to the
 #' variables and the rows to the observations.
